@@ -131,7 +131,7 @@
 
 
             async function fetchData() {
-                let data = await fetch('naughty jokes.json');  //Naughty
+                let data = await fetch('jokes.json');  //Naughty
                 let info = await data.json();
 
                 let num = Math.floor(Math.random() * info.length);
