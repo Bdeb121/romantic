@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Naughty Jokes | App</title>
+        <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                outline: none;
+                user-select: none;
+            }
+            body {
+                background: #546596;
+                font-family: 'Itim', cursive;
+            }
+            .container {
+                display: flex;
+                flex-direction: column;
+                max-width: 640px;
+                margin: 0 auto;
+                margin-top: 50px;
+                padding: 10px 20px 20px;
+                box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.2);
+                background-color: #f5f6fc;
+                border-radius: 12px;
+                position: relative;
+            }
+            .header{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .header h1 {
+                font-weight: 500;
+                padding: 6px 0;
+                color: #191919;
+            }
+            .header .icon{
+                width: 24px;
+                height: 24px;
+                cursor: pointer;
+            }
+            .header .icon svg{
+                width: 24px;
+                height: 24px;
+                fill: #39393990;
+                transition: all 0.3s ease-in-out;
+            }
+            .header .icon svg.active path{
+                fill: #595959;
+                d: path('M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z'); 
+            }
+            ul {
+                border-top: 1px solid #a0a0a0;
+                border-bottom: 1px solid #a0a0a0;
+                padding: 6px 0px 6px 20px;
+                color: #393939;
+            }
+            li {
+                padding: 12px;
+                font-size: 24px;
+                list-style: none;
+            }
+            li::before{
+                content: '#';
+                position: absolute;
+                top: 48px;
+                left: 24px;
+                font-size: 72px;
+                color: #39393920;
+            }
+            li small{
+                float: right;
+                margin: 20px 0 10px;
+                color: #393939bb;
+            }
+            button {
+                align-self: flex-end;
+                margin-top: 16px;
+                padding: 6px 8px;
+                font-size: 18px;
+                font-family: 'Itim', cursive;
+                font-weight: 500;
+                background: #f7f8ff;
+                border: 1px solid #969696;
+                border-radius: 8px;
+                transition: all 0.2s ease-in-out;
+                cursor: pointer;
+            }
+            button:hover {
+                background: #546596;
+                color: #f5f6fc;
+                border: 1px solid #546596;
+            }
+            @media(max-width: 640px){
+                .container {
+                    margin: 50px 10px 0;
+                }
+                .header .icon{
+                    cursor: none;
+                }
+                button{
+                    cursor: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Random Joke</h1>
+                <div class="icon">    
+                    <svg viewBox="0 0 448 512">
+                        <path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/>
+                    </svg>
+                </div>
+            </div>
+            <ul class="output"></ul>
+            <button class="get">Get Joke</button>
+        </div>
+
+        <script>
+            let output = document.querySelector('.output');
+            let get = document.querySelector('.get');
+            let icon = document.querySelector('.icon');
+
+
+            async function fetchData() {
+                let data = await fetch('naughty jokes.json');  //Naughty
+                let info = await data.json();
+
+                let num = Math.floor(Math.random() * info.length);
+
+                output.innerHTML = `<li>  ${info[num].joke} <br> <small> ---  ${info[num].categories[0]} --- </small>  </li>`; 
+
+                // copy text
+                icon.addEventListener('click', function() {
+                    let aux = document.createElement("input");
+                    aux.setAttribute("value", output.innerText);
+                    document.body.appendChild(aux);
+                    
+                    aux.select();
+                    document.execCommand("copy");
+                    
+                    document.body.removeChild(aux);
+
+                    // svg change
+                    icon.firstElementChild.classList.add('active');
+
+                    setTimeout(function () {
+                        icon.firstElementChild.classList.remove('active');
+                    }, 600);
+                });
+
+            }
+
+            fetchData();
+
+            get.addEventListener('click', fetchData);
+            
+        </script>
+    </body>
+</html>
